@@ -287,7 +287,7 @@ repository:
             \\b(?<!\\.)(
               async | continue | del | assert | break | finally | for
               | from | elif | else | if | except | pass | raise
-              | return | try | while | with | match | case
+              | return | try | while | with | match | case | prefetch
             )\\b
           
         '''
@@ -4978,9 +4978,6 @@ repository:
       {
         include: "#seqstring-single-core"
       }
-      {
-        include: "#seqstring-single-wildcards"
-      }
     ]
   "seqstring-normseq-quoted-single-line":
     name: "meta.seqstring.python"
@@ -5002,9 +4999,6 @@ repository:
       {
         include: "#seqstring-single-core"
       }
-      {
-        include: "#seqstring-single-wildcards"
-      }
     ]
   "seqstring-raw-quoted-single-line":
     name: "meta.seqstring.python"
@@ -5023,9 +5017,6 @@ repository:
     patterns: [
       {
         include: "seqstring-raw-single-core"
-      }
-      {
-        include: "#seqstring-single-wildcards"
       }
     ]
   "seqstring-single-core":
@@ -5071,5 +5062,5 @@ repository:
       
     '''
   "seqstring-single-wildcards":
-    name: "storage.type.string.python"
+    name: "constant.character.format.placeholder.other.python"
     match: "(\\.\\.\\.)|(_+)"

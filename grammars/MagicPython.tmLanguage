@@ -449,7 +449,7 @@ it's probably control flow like:
   \b(?&lt;!\.)(
     async | continue | del | assert | break | finally | for
     | from | elif | else | if | except | pass | raise
-    | return | try | while | with | match | case
+    | return | try | while | with | match | case | prefetch
   )\b
 </string>
           </dict>
@@ -8704,10 +8704,6 @@ indirectly through syntactic constructs
             <key>include</key>
             <string>#seqstring-single-core</string>
           </dict>
-          <dict>
-            <key>include</key>
-            <string>#seqstring-single-wildcards</string>
-          </dict>
         </array>
       </dict>
       <key>seqstring-normseq-quoted-single-line</key>
@@ -8755,10 +8751,6 @@ indirectly through syntactic constructs
             <key>include</key>
             <string>#seqstring-single-core</string>
           </dict>
-          <dict>
-            <key>include</key>
-            <string>#seqstring-single-wildcards</string>
-          </dict>
         </array>
       </dict>
       <key>seqstring-raw-quoted-single-line</key>
@@ -8800,10 +8792,6 @@ indirectly through syntactic constructs
           <dict>
             <key>include</key>
             <string>seqstring-raw-single-core</string>
-          </dict>
-          <dict>
-            <key>include</key>
-            <string>#seqstring-single-wildcards</string>
           </dict>
         </array>
       </dict>
@@ -8856,7 +8844,7 @@ indirectly through syntactic constructs
       <key>seqstring-single-wildcards</key>
       <dict>
         <key>name</key>
-        <string>storage.type.string.python</string>
+        <string>constant.character.format.placeholder.other.python</string>
         <key>match</key>
         <string>(\.\.\.)|(_+)</string>
       </dict>

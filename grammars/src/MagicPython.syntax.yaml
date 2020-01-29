@@ -386,7 +386,7 @@ repository:
             \b(?<!\.)(
               async | continue | del | assert | break | finally | for
               | from | elif | else | if | except | pass | raise
-              | return | try | while | with | match | case
+              | return | try | while | with | match | case | prefetch
             )\b
       - name: storage.modifier.declaration.python
         match: |

@@ -22,8 +22,8 @@ seqstring-seqnorm-quoted-${line}-line:
                 punctuation.definition.string.end.python}
     '2': {name: invalid.illegal.newline.python}
   patterns:
+    # - include: '#seqstring-${line}-wildcards'
     - include: '#seqstring-${line}-core'
-    - include: '#seqstring-${line}-wildcards'
 
 seqstring-normseq-quoted-${line}-line:
   name: meta.seqstring.python
@@ -42,8 +42,8 @@ seqstring-normseq-quoted-${line}-line:
                 punctuation.definition.string.end.python}
     '2': {name: invalid.illegal.newline.python}
   patterns:
+    # - include: '#seqstring-${line}-wildcards'
     - include: '#seqstring-${line}-core'
-    - include: '#seqstring-${line}-wildcards'
 
 seqstring-raw-quoted-${line}-line:
   name: meta.seqstring.python
@@ -61,8 +61,8 @@ seqstring-raw-quoted-${line}-line:
                 punctuation.definition.string.end.python}
     '2': {name: invalid.illegal.newline.python}
   patterns:
+    # - include: '#seqstring-${line}-wildcards'
     - include: 'seqstring-raw-${line}-core'
-    - include: '#seqstring-${line}-wildcards'
 
 seqstring-${line}-core:
   name: string.quoted.${line}.python string.interpolated.python
@@ -105,8 +105,8 @@ seqstring-raw-${line}-core:
       | \n
 
 seqstring-${line}-wildcards:
-  name: storage.type.string.python
-  match: '(\.\.\.)|(_+)'
+  name: constant.character.format.placeholder.other.python
+  match: (\.\.\.)|(_+)
 
 # fstring-${line}-brace:
 #   comment: value interpolation using { ... }
