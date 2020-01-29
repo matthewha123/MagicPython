@@ -4,7 +4,7 @@ scopeName: source.python
 # NOTE: remember to update package.json with VSCode file types.
 fileTypes: [py, py3, rpy, pyw, cpy, pyi,
             SConstruct, Sconstruct, sconstruct, SConscript,
-            gyp, gypi, wsgi, kv, Snakefile, tac]
+            gyp, gypi, wsgi, kv, Snakefile, tac, seq]
 first_line_match: ^#![ \t]*/.*\bpython[\d\.]*\b
 firstLineMatch: ^#![ \t]*/.*\bpython[\d\.]*\b
 uuid: 742deb57-6e38-4192-bed6-410746efd85d
@@ -206,6 +206,13 @@ repository:
         fguard: ""
         guard: ""
 
+    - file: 'pyseqstring.inc.syntax.yaml'
+      vars:
+        line: single
+        marker: (['"])
+        fguard: "|(?=\\n)"
+        guard: "|((?<!\\\\)\\n)"
+
 
   impossible:
     comment: This is a special rule that should be used where no match
@@ -379,7 +386,7 @@ repository:
             \b(?<!\.)(
               async | continue | del | assert | break | finally | for
               | from | elif | else | if | except | pass | raise
-              | return | try | while | with
+              | return | try | while | with | match | case
             )\b
       - name: storage.modifier.declaration.python
         match: |
@@ -555,7 +562,7 @@ repository:
 
           | (\*\* | \* | \+ | - | % | // | / | @)                (?# 4)
 
-          | (!= | == | >= | <= | < | >)                          (?# 5)
+          | (!= | == | >= | <= | < | > | (\|>) | (\|\|>))                          (?# 5)
 
     captures:
       '1': {name: keyword.operator.logical.python}
@@ -694,6 +701,8 @@ repository:
       - include: '#fstring-normf-quoted-single-line'
       - include: '#fstring-raw-quoted-multi-line'
       - include: '#fstring-raw-quoted-single-line'
+      - include: '#seqstring-seqnorm-quoted-single-line'
+      - include: '#seqstring-raw-quoted-single-line'
 
   string-unicode-guts:
     patterns:
@@ -1343,7 +1352,7 @@ repository:
         (?<!\.) \b(
           bool | bytearray | bytes | classmethod | complex | dict
           | float | frozenset | int | list | object | property
-          | set | slice | staticmethod | str | tuple | type
+          | set | slice | staticmethod | str | tuple | type | seq
 
           (?# Although 'super' is not a type, it's related to types,
               and is special enough to be highlighted differently from
@@ -1447,7 +1456,7 @@ repository:
   illegal-operator:
     patterns:
       - name: invalid.illegal.operator.python
-        match: '&&|\|\||--|\+\+'
+        match: '&&|((\|\|)(?!>))|--|\+\+'
       - name: invalid.illegal.operator.python
         match: '[?$]'
       - name: invalid.illegal.operator.python

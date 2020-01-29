@@ -18,6 +18,7 @@ fileTypes: [
   "kv"
   "Snakefile"
   "tac"
+  "seq"
 ]
 first_line_match: "^#![ \\t]*/.*\\bpython[\\d\\.]*\\b"
 firstLineMatch: "^#![ \\t]*/.*\\bpython[\\d\\.]*\\b"
@@ -286,7 +287,7 @@ repository:
             \\b(?<!\\.)(
               async | continue | del | assert | break | finally | for
               | from | elif | else | if | except | pass | raise
-              | return | try | while | with
+              | return | try | while | with | match | case
             )\\b
           
         '''
@@ -575,7 +576,7 @@ repository:
       
           | (\\*\\* | \\* | \\+ | - | % | // | / | @)                (?# 4)
       
-          | (!= | == | >= | <= | < | >)                          (?# 5)
+          | (!= | == | >= | <= | < | > | (\\|>) | (\\|\\|>))                          (?# 5)
       
     '''
     captures:
@@ -797,6 +798,12 @@ repository:
       }
       {
         include: "#fstring-raw-quoted-single-line"
+      }
+      {
+        include: "#seqstring-seqnorm-quoted-single-line"
+      }
+      {
+        include: "#seqstring-raw-quoted-single-line"
       }
     ]
   "string-unicode-guts":
@@ -1796,7 +1803,7 @@ repository:
         (?<!\\.) \\b(
           bool | bytearray | bytes | classmethod | complex | dict
           | float | frozenset | int | list | object | property
-          | set | slice | staticmethod | str | tuple | type
+          | set | slice | staticmethod | str | tuple | type | seq
       
           (?# Although 'super' is not a type, it's related to types,
               and is special enough to be highlighted differently from
@@ -1918,7 +1925,7 @@ repository:
     patterns: [
       {
         name: "invalid.illegal.operator.python"
-        match: "&&|\\|\\||--|\\+\\+"
+        match: "&&|((\\|\\|)(?!>))|--|\\+\\+"
       }
       {
         name: "invalid.illegal.operator.python"
@@ -4951,3 +4958,118 @@ repository:
         match: "(\\w)"
       }
     ]
+  "seqstring-seqnorm-quoted-single-line":
+    name: "meta.seqstring.python"
+    begin: "(\\b[sS])([bBuU])?((['\"]))"
+    end: "(\\3)|((?<!\\\\)\\n)"
+    beginCaptures:
+      "1":
+        name: "storage.type.string.python string.quoted.single.python string.interpolated.python"
+      "2":
+        name: "invalid.illegal.prefix.python"
+      "3":
+        name: "string.quoted.single.python string.interpolated.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.single.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#seqstring-single-core"
+      }
+      {
+        include: "#seqstring-single-wildcards"
+      }
+    ]
+  "seqstring-normseq-quoted-single-line":
+    name: "meta.seqstring.python"
+    begin: "(\\b[bBuU])([sS])((['\"]))"
+    end: "(\\3)|((?<!\\\\)\\n)"
+    beginCaptures:
+      "1":
+        name: "invalid.illegal.prefix.python"
+      "2":
+        name: "storage.type.string.python string.quoted.single.python string.interpolated.python"
+      "3":
+        name: "string.quoted.single.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.single.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#seqstring-single-core"
+      }
+      {
+        include: "#seqstring-single-wildcards"
+      }
+    ]
+  "seqstring-raw-quoted-single-line":
+    name: "meta.seqstring.python"
+    begin: "(\\b(?:[R][sS]|[sS][R]))((['\"]))"
+    end: "(\\2)|((?<!\\\\)\\n)"
+    beginCaptures:
+      "1":
+        name: "storage.type.string.python string.quoted.raw.single.python string.interpolated.python"
+      "2":
+        name: "string.quoted.raw.single.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.raw.single.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "seqstring-raw-single-core"
+      }
+      {
+        include: "#seqstring-single-wildcards"
+      }
+    ]
+  "seqstring-single-core":
+    name: "string.quoted.single.python string.interpolated.python"
+    match: '''
+      (?x)
+        (.+?)
+          (
+            (?# .* and .*? in multi-line match need special handling of
+              newlines otherwise SublimeText and Atom will match slightly
+              differently.
+      
+              The guard for newlines has to be separate from the
+              lookahead because of special $ matching rule.)
+            ($\\n?)
+            |
+            (?=[\\\\\\}\\{]|(['"])|((?<!\\\\)\\n))
+          )
+        (?# due to how multiline regexps are matched we need a special case
+          for matching a newline character)
+        | \\n
+      
+    '''
+  "seqstring-raw-single-core":
+    name: "string.quoted.raw.single.python string.interpolated.python"
+    match: '''
+      (?x)
+        (.+?)
+          (
+            (?# .* and .*? in multi-line match need special handling of
+              newlines otherwise SublimeText and Atom will match slightly
+              differently.
+      
+              The guard for newlines has to be separate from the
+              lookahead because of special $ matching rule.)
+            ($\\n?)
+            |
+            (?=[\\\\\\}\\{]|(['"])|((?<!\\\\)\\n))
+          )
+        (?# due to how multiline regexps are matched we need a special case
+          for matching a newline character)
+        | \\n
+      
+    '''
+  "seqstring-single-wildcards":
+    name: "storage.type.string.python"
+    match: "(\\.\\.\\.)|(_+)"
